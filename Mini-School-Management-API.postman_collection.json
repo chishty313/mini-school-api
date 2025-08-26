@@ -1,684 +1,1123 @@
 {
-  "info": {
-    "name": "Mini School Management API",
-    "description": "Complete API collection for Mini School Management System with authentication, students, and classes management",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
-  },
-  "variable": [
-    {
-      "key": "baseUrl",
-      "value": "http://localhost:3000",
-      "type": "string"
-    },
-    {
-      "key": "adminToken",
-      "value": "",
-      "type": "string"
-    },
-    {
-      "key": "teacherToken",
-      "value": "",
-      "type": "string"
-    },
-    {
-      "key": "studentToken",
-      "value": "",
-      "type": "string"
-    }
-  ],
-  "item": [
-    {
-      "name": "🔧 System",
-      "item": [
-        {
-          "name": "Health Check",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/",
-              "host": ["{{baseUrl}}"],
-              "path": [""]
-            }
-          }
-        },
-        {
-          "name": "Database Test",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/test-db",
-              "host": ["{{baseUrl}}"],
-              "path": ["test-db"]
-            }
-          }
-        }
-      ]
-    },
-    {
-      "name": "🔐 Authentication",
-      "item": [
-        {
-          "name": "Register Admin",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "if (pm.response.status === 'Created') {",
-                  "    const responseJson = pm.response.json();",
-                  "    pm.collectionVariables.set('adminToken', responseJson.data.tokens.accessToken);",
-                  "}"
-                ]
-              }
-            }
-          ],
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"Admin User\",\n  \"email\": \"admin@school.com\",\n  \"password\": \"AdminPass123!\",\n  \"role\": \"admin\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/auth/register",
-              "host": ["{{baseUrl}}"],
-              "path": ["auth", "register"]
-            }
-          }
-        },
-        {
-          "name": "Register Teacher",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "if (pm.response.status === 'Created') {",
-                  "    const responseJson = pm.response.json();",
-                  "    pm.collectionVariables.set('teacherToken', responseJson.data.tokens.accessToken);",
-                  "}"
-                ]
-              }
-            }
-          ],
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"Teacher User\",\n  \"email\": \"teacher@school.com\",\n  \"password\": \"TeacherPass123!\",\n  \"role\": \"teacher\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/auth/register",
-              "host": ["{{baseUrl}}"],
-              "path": ["auth", "register"]
-            }
-          }
-        },
-        {
-          "name": "Register Student",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "if (pm.response.status === 'Created') {",
-                  "    const responseJson = pm.response.json();",
-                  "    pm.collectionVariables.set('studentToken', responseJson.data.tokens.accessToken);",
-                  "}"
-                ]
-              }
-            }
-          ],
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"Student User\",\n  \"email\": \"student@school.com\",\n  \"password\": \"StudentPass123!\",\n  \"role\": \"student\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/auth/register",
-              "host": ["{{baseUrl}}"],
-              "path": ["auth", "register"]
-            }
-          }
-        },
-        {
-          "name": "Login Admin",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "if (pm.response.status === 'OK') {",
-                  "    const responseJson = pm.response.json();",
-                  "    pm.collectionVariables.set('adminToken', responseJson.data.tokens.accessToken);",
-                  "}"
-                ]
-              }
-            }
-          ],
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"email\": \"admin@school.com\",\n  \"password\": \"AdminPass123!\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/auth/login",
-              "host": ["{{baseUrl}}"],
-              "path": ["auth", "login"]
-            }
-          }
-        },
-        {
-          "name": "Get Profile",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{adminToken}}"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/auth/profile",
-              "host": ["{{baseUrl}}"],
-              "path": ["auth", "profile"]
-            }
-          }
-        },
-        {
-          "name": "Logout",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{adminToken}}"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/auth/logout",
-              "host": ["{{baseUrl}}"],
-              "path": ["auth", "logout"]
-            }
-          }
-        }
-      ]
-    },
-    {
-      "name": "👨‍🎓 Students",
-      "item": [
-        {
-          "name": "Create Student (Admin)",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{adminToken}}"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"John Doe\",\n  \"age\": 16\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/students",
-              "host": ["{{baseUrl}}"],
-              "path": ["students"]
-            }
-          }
-        },
-        {
-          "name": "Get All Students (Admin)",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{adminToken}}"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/students",
-              "host": ["{{baseUrl}}"],
-              "path": ["students"]
-            }
-          }
-        },
-        {
-          "name": "Get All Students (Teacher)",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{teacherToken}}"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/students",
-              "host": ["{{baseUrl}}"],
-              "path": ["students"]
-            }
-          }
-        },
-        {
-          "name": "Get Students with Pagination",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{adminToken}}"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/students?page=1&limit=5",
-              "host": ["{{baseUrl}}"],
-              "path": ["students"],
-              "query": [
-                {
-                  "key": "page",
-                  "value": "1"
-                },
-                {
-                  "key": "limit",
-                  "value": "5"
-                }
-              ]
-            }
-          }
-        },
-        {
-          "name": "Get Student by ID",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{adminToken}}"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/students/1",
-              "host": ["{{baseUrl}}"],
-              "path": ["students", "1"]
-            }
-          }
-        },
-        {
-          "name": "Update Student (Admin)",
-          "request": {
-            "method": "PUT",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{adminToken}}"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"John Updated Doe\",\n  \"age\": 17\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/students/1",
-              "host": ["{{baseUrl}}"],
-              "path": ["students", "1"]
-            }
-          }
-        },
-        {
-          "name": "Delete Student (Admin)",
-          "request": {
-            "method": "DELETE",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{adminToken}}"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/students/1",
-              "host": ["{{baseUrl}}"],
-              "path": ["students", "1"]
-            }
-          }
-        }
-      ]
-    },
-    {
-      "name": "🎓 Classes",
-      "item": [
-        {
-          "name": "Create Class (Admin)",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{adminToken}}"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"Mathematics\",\n  \"section\": \"A\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/classes",
-              "host": ["{{baseUrl}}"],
-              "path": ["classes"]
-            }
-          }
-        },
-        {
-          "name": "Get All Classes (Admin)",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{adminToken}}"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/classes",
-              "host": ["{{baseUrl}}"],
-              "path": ["classes"]
-            }
-          }
-        },
-        {
-          "name": "Get All Classes (Teacher)",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{teacherToken}}"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/classes",
-              "host": ["{{baseUrl}}"],
-              "path": ["classes"]
-            }
-          }
-        },
-        {
-          "name": "Get Class by ID",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{adminToken}}"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/classes/1",
-              "host": ["{{baseUrl}}"],
-              "path": ["classes", "1"]
-            }
-          }
-        },
-        {
-          "name": "Get Class Students",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{adminToken}}"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/classes/1/students",
-              "host": ["{{baseUrl}}"],
-              "path": ["classes", "1", "students"]
-            }
-          }
-        },
-        {
-          "name": "Enroll Student to Class (Admin)",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{adminToken}}"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"studentId\": 1\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/classes/1/enroll",
-              "host": ["{{baseUrl}}"],
-              "path": ["classes", "1", "enroll"]
-            }
-          }
-        },
-        {
-          "name": "Enroll Student to Class (Teacher)",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{teacherToken}}"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"studentId\": 2\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/classes/1/enroll",
-              "host": ["{{baseUrl}}"],
-              "path": ["classes", "1", "enroll"]
-            }
-          }
-        },
-        {
-          "name": "Update Class (Admin)",
-          "request": {
-            "method": "PUT",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{adminToken}}"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"Advanced Mathematics\",\n  \"section\": \"A\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/classes/1",
-              "host": ["{{baseUrl}}"],
-              "path": ["classes", "1"]
-            }
-          }
-        },
-        {
-          "name": "Delete Class (Admin)",
-          "request": {
-            "method": "DELETE",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{adminToken}}"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/classes/1",
-              "host": ["{{baseUrl}}"],
-              "path": ["classes", "1"]
-            }
-          }
-        }
-      ]
-    },
-    {
-      "name": "❌ Error Tests",
-      "item": [
-        {
-          "name": "Access Students without Token (401)",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/students",
-              "host": ["{{baseUrl}}"],
-              "path": ["students"]
-            }
-          }
-        },
-        {
-          "name": "Create Student as Teacher (403)",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{teacherToken}}"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"Unauthorized Student\",\n  \"age\": 16\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/students",
-              "host": ["{{baseUrl}}"],
-              "path": ["students"]
-            }
-          }
-        },
-        {
-          "name": "Create Student as Student (403)",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{studentToken}}"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"Unauthorized Student\",\n  \"age\": 16\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/students",
-              "host": ["{{baseUrl}}"],
-              "path": ["students"]
-            }
-          }
-        },
-        {
-          "name": "Invalid Student Data (400)",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{adminToken}}"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"Test Student\",\n  \"age\": 3\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/students",
-              "host": ["{{baseUrl}}"],
-              "path": ["students"]
-            }
-          }
-        },
-        {
-          "name": "Get Non-existent Student (404)",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{adminToken}}"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/students/9999",
-              "host": ["{{baseUrl}}"],
-              "path": ["students", "9999"]
-            }
-          }
-        }
-      ]
-    }
-  ]
+	"info": {
+		"_postman_id": "bef403b9-3e1d-4f89-9b41-6e7a443a5dc3",
+		"name": "Mini School API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "31555275"
+	},
+	"item": [
+		{
+			"name": "SECTION A: Basic Server Tests",
+			"item": [
+				{
+					"name": "Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Database Connection Test",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/test-db",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"test-db"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "404 Route Test",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/nonexistent-route",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"nonexistent-route"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "SECTION B: Authentication Tests (Success Cases)",
+			"item": [
+				{
+					"name": "Register Admin User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Admin User\",\r\n  \"email\": \"test_admin@school.com\",\r\n  \"password\": \"AdminPass123!\",\r\n  \"role\": \"admin\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/auth/register",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register Teacher User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Teacher User\",\r\n  \"email\": \"teacher@school.com\",\r\n  \"password\": \"TeacherPass123!\",\r\n  \"role\": \"teacher\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/auth/register",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register Student User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Student User\",\r\n  \"email\": \"student@school.com\",\r\n  \"password\": \"StudentPass123!\",\r\n  \"role\": \"student\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/auth/register",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login Admin User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoiYWRtaW5Ac2Nob29sLmNvbSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NjE5MTg4NiwiZXhwIjoxNzU2MTk1NDg2fQ.yAf-1mVYdzo0jCGfDakeozuqeOduDcumT20RisUD2T4",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"test_admin@school.com\",\r\n  \"password\": \"AdminPass123!\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/auth/login",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login Teacher User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"teacher@school.com\",\r\n  \"password\": \"TeacherPass123!\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/auth/login",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login Student User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"student@school.com\",\r\n  \"password\": \"StudentPass123!\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/auth/login",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "SECTION C: Protected Route Tests",
+			"item": [
+				{
+					"name": "Get Admin Profile (Valid Token)",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoiYWRtaW5Ac2Nob29sLmNvbSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NjE4NjQ3OCwiZXhwIjoxNzU2MTkwMDc4fQ.TENr6Cye9uG4BsQ0BJWNMuhNxZGH79CTqvKYESKYe2k",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/auth/profile",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"auth",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Profile Without Token",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/auth/profile",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"auth",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Profile with Invalid Token",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciyyJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoiYWRtaW5Ac2Nob29sLmNvbSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NjE4NTQxNCwiZXhwIjoxNzU2MTg5MDE0fQ.AA_5O6PlfXoTAr3Zk_v9SDe_krWvgzV-ETX79juNOOw",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/auth/profile",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"auth",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout (Valid Token)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoiYWRtaW5Ac2Nob29sLmNvbSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NjE4NjQ3OCwiZXhwIjoxNzU2MTkwMDc4fQ.TENr6Cye9uG4BsQ0BJWNMuhNxZGH79CTqvKYESKYe2k",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/auth/logout",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "SECTION D: Error/Validation Tests",
+			"item": [
+				{
+					"name": "Register with Weak Password",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Test User\",\r\n  \"email\": \"weak@school.com\",\r\n  \"password\": \"123\",\r\n  \"role\": \"student\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/auth/register",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register with Missing Fields",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Test User\",\r\n  \"email\": \"incomplete@school.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/auth/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register with Invalid Email",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoiYWRtaW5Ac2Nob29sLmNvbSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NjE4NTQ1NCwiZXhwIjoxNzU2MTg5MDU0fQ.3py_3a6pc-_ALiQ_tz3oXgNvW9YcLZ5cdsRSKwTymt0",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Test User\",\r\n  \"email\": \"invalid-email\",\r\n  \"password\": \"ValidPass123!\",\r\n  \"role\": \"student\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/auth/register",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register with Invalid Role",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Test User\",\r\n  \"email\": \"test@school.com\",\r\n  \"password\": \"ValidPass123!\",\r\n  \"role\": \"invalidrole\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/auth/register",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register Duplicate Email",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoiYWRtaW5Ac2Nob29sLmNvbSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NjE4NTQ1NCwiZXhwIjoxNzU2MTg5MDU0fQ.3py_3a6pc-_ALiQ_tz3oXgNvW9YcLZ5cdsRSKwTymt0",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Admin User\",\r\n  \"email\": \"admin@school.com\",\r\n  \"password\": \"AdminPass123!\",\r\n  \"role\": \"admin\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/auth/register",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login with Wrong Password",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoiYWRtaW5Ac2Nob29sLmNvbSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NjE4NTQ1NCwiZXhwIjoxNzU2MTg5MDU0fQ.3py_3a6pc-_ALiQ_tz3oXgNvW9YcLZ5cdsRSKwTymt0",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"admin@school.com\",\r\n  \"password\": \"WrongPassword123!\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/auth/login",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login with Non-existent Email",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoiYWRtaW5Ac2Nob29sLmNvbSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NjE4NTQ1NCwiZXhwIjoxNzU2MTg5MDU0fQ.3py_3a6pc-_ALiQ_tz3oXgNvW9YcLZ5cdsRSKwTymt0",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"nonexistent@school.com\",\r\n  \"password\": \"SomePassword123!\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/auth/login",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login with Missing Fields",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoiYWRtaW5Ac2Nob29sLmNvbSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NjE4NTQ1NCwiZXhwIjoxNzU2MTg5MDU0fQ.3py_3a6pc-_ALiQ_tz3oXgNvW9YcLZ5cdsRSKwTymt0",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"admin@school.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/auth/login",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "SECTION E: Token Refresh Tests",
+			"item": [
+				{
+					"name": "Refresh Token (Valid)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"refreshToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsImVtYWlsIjoidGVhY2hlckBzY2hvb2wuY29tIiwicm9sZSI6InRlYWNoZXIiLCJpYXQiOjE3NTYxOTE4NDQsImV4cCI6MTc1Njc5NjY0NH0.MAbbiTqaG_pn4HlCH9bytsgrT4Gjuvw7u14c3jxxxYw\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/auth/refresh",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"auth",
+								"refresh"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh Token (Invalid)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"refreshToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoiYWRtaW5Ac2Nob29sLmNvbSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NjE4NTQxNCwiZXhwIjoxNzU2NzkwMjE0fQ.ZE1CEkl1UIlgg1BZfFaIGcbGyYEmTNk4NgoXki5KNmw\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/auth/refresh",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"auth",
+								"refresh"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "SECTION F: Student Module Tests",
+			"item": [
+				{
+					"name": "Create Student (Admin Only)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoiYWRtaW5Ac2Nob29sLmNvbSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NjE5MTg4NiwiZXhwIjoxNzU2MTk1NDg2fQ.yAf-1mVYdzo0jCGfDakeozuqeOduDcumT20RisUD2T4",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"John Doe\",\r\n  \"age\": 16\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/students",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"students"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Another Student",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoiYWRtaW5Ac2Nob29sLmNvbSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NjE5MTg4NiwiZXhwIjoxNzU2MTk1NDg2fQ.yAf-1mVYdzo0jCGfDakeozuqeOduDcumT20RisUD2T4",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Jane Smith\", \r\n  \"age\": 17\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/students",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"students"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Students (Admin/Teacher)",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoiYWRtaW5Ac2Nob29sLmNvbSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NjE5MTg4NiwiZXhwIjoxNzU2MTk1NDg2fQ.yAf-1mVYdzo0jCGfDakeozuqeOduDcumT20RisUD2T4",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"John Doe\",\r\n  \"age\": 16\r\n}"
+						},
+						"url": {
+							"raw": "{{baseURL}}/students",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"students"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Student by ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoiYWRtaW5Ac2Nob29sLmNvbSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NjE5MTg4NiwiZXhwIjoxNzU2MTk1NDg2fQ.yAf-1mVYdzo0jCGfDakeozuqeOduDcumT20RisUD2T4",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/students/1",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"students",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "SECTION G: Class Module Tests",
+			"item": [
+				{
+					"name": "Create Class (Admin Only)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoiYWRtaW5Ac2Nob29sLmNvbSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NjE5MTg4NiwiZXhwIjoxNzU2MTk1NDg2fQ.yAf-1mVYdzo0jCGfDakeozuqeOduDcumT20RisUD2T4",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Mathematics\",\r\n  \"section\": \"A\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/classes",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"classes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Another Class",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Classes (Admin/Teacher)",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "Get Class by ID",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "Enroll Student to Class (Admin/Teacher)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoiYWRtaW5Ac2Nob29sLmNvbSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NjE5MTg4NiwiZXhwIjoxNzU2MTk1NDg2fQ.yAf-1mVYdzo0jCGfDakeozuqeOduDcumT20RisUD2T4",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"studentId\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/classes/1/enroll",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"classes",
+								"1",
+								"enroll"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "SECTION H: Error & Authorization Tests",
+			"item": [
+				{
+					"name": "Student Access Without Token",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/students",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"students"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Student Creation by Teacher (Should Fail)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsImVtYWlsIjoidGVhY2hlckBzY2hvb2wuY29tIiwicm9sZSI6InRlYWNoZXIiLCJpYXQiOjE3NTYxOTE4NDQsImV4cCI6MTc1NjE5NTQ0NH0.kuVI0OtVkhx-Wz_2PlrAWEML9Tmn0x-11BEccyScxsE",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/students",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"students"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Class Creation by Teacher (Should Fail)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsImVtYWlsIjoidGVhY2hlckBzY2hvb2wuY29tIiwicm9sZSI6InRlYWNoZXIiLCJpYXQiOjE3NTYxOTE4NDQsImV4cCI6MTc1NjE5NTQ0NH0.kuVI0OtVkhx-Wz_2PlrAWEML9Tmn0x-11BEccyScxsE",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"studentId\": 1\r\n}"
+						},
+						"url": {
+							"raw": "{{baseURL}}/classes",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"classes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Student Access by Student Role (Should Fail)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjQsImVtYWlsIjoic3R1ZGVudEBzY2hvb2wuY29tIiwicm9sZSI6InN0dWRlbnQiLCJpYXQiOjE3NTYxOTQxMjksImV4cCI6MTc1NjE5NzcyOX0.6fOYMi8IlNa8KXcNV7rybxKA9ImD48YvHeaRAeaQlUg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/students",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"students"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Invalid Student Data",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoiYWRtaW5Ac2Nob29sLmNvbSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NjE5Mjg1OCwiZXhwIjoxNzU2MTk2NDU4fQ.vUI39jRfBBp8U-RJJ53VnLcFxAEjzTAcFC_vnzuOafo",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Test\",\r\n  \"age\": 3\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/students",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"students"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Enroll Non-existent Student",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoiYWRtaW5Ac2Nob29sLmNvbSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NjE5Mjg1OCwiZXhwIjoxNzU2MTk2NDU4fQ.vUI39jRfBBp8U-RJJ53VnLcFxAEjzTAcFC_vnzuOafo",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"studentId\": 9999\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/classes/1/enroll",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"classes",
+								"1",
+								"enroll"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "baseURL",
+			"value": "",
+			"type": "default"
+		}
+	]
 }
