@@ -1,0 +1,76 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: school-management-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres123
+      POSTGRES_DB: school_management
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d school_management"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # pgAdmin (Database Management Interface)
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: school-management-pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@school.local
+      PGADMIN_DEFAULT_PASSWORD: admin123
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    ports:
+      - "8080:80"
+    depends_on:
+      - postgres
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+
+  # Application (Optional - for full containerization)
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: school-management-api
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: school_management
+      DB_USER: postgres
+      DB_PASSWORD: postgres123
+      JWT_ACCESS_SECRET: your_super_secret_access_key_production
+      JWT_REFRESH_SECRET: your_super_secret_refresh_key_production
+      JWT_ACCESS_EXPIRES_IN: 1h
+      JWT_REFRESH_EXPIRES_IN: 7d
+    ports:
+      - "3000:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - .:/app
+      - /app/node_modules
+
+volumes:
+  postgres_data:
+    driver: local
+  pgadmin_data:
+    driver: local
+
+networks:
+  default:
+    name: school-management-network
