@@ -39,6 +39,23 @@ A comprehensive RESTful API for school management built with Express.js, TypeScr
 - Database migrations with Drizzle
 - Connection pooling and health checks
 
+## 🌐 Live Demo
+
+**Live API**: https://your-project-name.vercel.app
+**GitHub Repository**: https://github.com/chishty313/mini-school-api
+
+### Test the Live API
+
+1. **Import the Postman collection**
+2. **Update baseUrl to**: `https://your-project-name.vercel.app`
+3. **Register a test user or use seeded credentials**
+4. **Test all endpoints**
+
+### Seeded Credentials (if available)
+- **Admin**: admin@school.edu / AdminPass123!
+- **Teacher**: john.teacher@school.edu / TeacherPass123!
+- **Student**: alice.student@school.edu / StudentPass123!
+
 ## 🚀 Quick Start
 
 ### Prerequisites
@@ -362,7 +379,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## 👥 Authors
 
-- Your Name - [your.email@example.com](mailto:your.email@example.com)
+- Shoabur Rahman Chishty - [chishty828rahman@gmail.com](mailto:chishty828rahman@gmail.com)
 
 ## 🙏 Acknowledgments
 
