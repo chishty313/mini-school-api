@@ -41,13 +41,13 @@ A comprehensive RESTful API for school management built with Express.js, TypeScr
 
 ## 🌐 Live Demo
 
-**Live API**: https://your-project-name.vercel.app
+**Live API**: [https://mini-school-api.vercel.app](https://mini-school-api.vercel.app/)
 **GitHub Repository**: https://github.com/chishty313/mini-school-api
 
 ### Test the Live API
 
 1. **Import the Postman collection**
-2. **Update baseUrl to**: `https://your-project-name.vercel.app`
+2. **Update baseUrl to**: `https://mini-school-api.vercel.app/`
 3. **Register a test user or use seeded credentials**
 4. **Test all endpoints**
 
@@ -65,7 +65,7 @@ A comprehensive RESTful API for school management built with Express.js, TypeScr
 
 ### 1. Clone Repository
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/chishty313/mini-school-api.git
 cd mini-school-api
 ```
 
