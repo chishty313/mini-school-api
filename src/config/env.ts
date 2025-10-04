@@ -20,6 +20,7 @@ export function validateEnvironment(): void {
   if (missing.length > 0) {
     console.error('❌ Missing required environment variables:');
     missing.forEach(envVar => console.error(`  - ${envVar}`));
+    console.error('Available environment variables:', Object.keys(process.env));
     process.exit(1);
   }
   
