@@ -1,45 +1,52 @@
-import { Router } from 'express';
-import { StudentController } from '../controllers/student.controller';
-import { validateBody } from '../middleware/validation';
-import { authAndRequireRoles } from '../middleware/auth';
-import { CreateStudentDto, UpdateStudentDto } from '../validators/student.dto';
+import { Router } from "express";
+import { StudentController } from "../controllers/student.controller";
+import { validateBody } from "../middleware/validation";
+import { authAndRequireRoles } from "../middleware/auth";
+import { CreateStudentDto, UpdateStudentDto } from "../validators/student.dto";
 
 const router = Router();
 
 // POST /students - Create new student (Admin only)
 router.post(
-  '/',
-  ...authAndRequireRoles('admin'),
+  "/",
+  ...authAndRequireRoles("admin"),
   validateBody(CreateStudentDto),
   StudentController.createStudent
 );
 
 // GET /students - Get all students with pagination (Admin and Teacher)
 router.get(
-  '/',
-  ...authAndRequireRoles('admin', 'teacher'),
+  "/",
+  ...authAndRequireRoles("admin", "teacher"),
   StudentController.getStudents
 );
 
 // GET /students/:id - Get student by ID (Admin and Teacher)
 router.get(
-  '/:id',
-  ...authAndRequireRoles('admin', 'teacher'),
+  "/:id",
+  ...authAndRequireRoles("admin", "teacher"),
   StudentController.getStudentById
+);
+
+// GET /students/me/classes - Get current student's classes (Student only)
+router.get(
+  "/me/classes",
+  ...authAndRequireRoles("student"),
+  StudentController.getMyClasses
 );
 
 // PUT /students/:id - Update student (Admin only)
 router.put(
-  '/:id',
-  ...authAndRequireRoles('admin'),
+  "/:id",
+  ...authAndRequireRoles("admin"),
   validateBody(UpdateStudentDto),
   StudentController.updateStudent
 );
 
 // DELETE /students/:id - Delete student (Admin only)
 router.delete(
-  '/:id',
-  ...authAndRequireRoles('admin'),
+  "/:id",
+  ...authAndRequireRoles("admin"),
   StudentController.deleteStudent
 );
 

@@ -1,6 +1,10 @@
-import { Request, Response } from 'express';
-import { ClassService } from '../services/class.service';
-import { CreateClassDto, UpdateClassDto, EnrollStudentDto } from '../validators/class.dto';
+import { Request, Response } from "express";
+import { ClassService } from "../services/class.service";
+import {
+  CreateClassDto,
+  UpdateClassDto,
+  EnrollStudentDto,
+} from "../validators/class.dto";
 
 export class ClassController {
   /**
@@ -18,26 +22,26 @@ export class ClassController {
       });
 
       res.status(201).json({
-        message: 'Class created successfully',
+        message: "Class created successfully",
         data: { class: newClass },
       });
     } catch (error) {
       if (error instanceof Error) {
-        if (error.message.includes('already exists')) {
+        if (error.message.includes("already exists")) {
           res.status(409).json({
-            error: 'Class creation failed',
+            error: "Class creation failed",
             message: error.message,
           });
         } else {
           res.status(500).json({
-            error: 'Class creation failed',
-            message: 'An unexpected error occurred',
+            error: "Class creation failed",
+            message: "An unexpected error occurred",
           });
         }
       } else {
         res.status(500).json({
-          error: 'Class creation failed',
-          message: 'An unexpected error occurred',
+          error: "Class creation failed",
+          message: "An unexpected error occurred",
         });
       }
     }
@@ -50,17 +54,20 @@ export class ClassController {
    */
   static async getClasses(req: Request, res: Response): Promise<void> {
     try {
-      const classes = await ClassService.getClasses();
+      const user = (req as any).user;
+      const teacherId = user?.role === "teacher" ? user.userId : undefined;
+
+      const classes = await ClassService.getClasses(teacherId);
 
       res.status(200).json({
-        message: 'Classes retrieved successfully',
+        message: "Classes retrieved successfully",
         data: { classes },
       });
     } catch (error) {
-      console.error('Get classes error:', error);
+      console.error("Get classes error:", error);
       res.status(500).json({
-        error: 'Failed to retrieve classes',
-        message: 'An unexpected error occurred',
+        error: "Failed to retrieve classes",
+        message: "An unexpected error occurred",
       });
     }
   }
@@ -76,8 +83,8 @@ export class ClassController {
 
       if (isNaN(id) || id < 1) {
         res.status(400).json({
-          error: 'Invalid class ID',
-          message: 'Class ID must be a positive number',
+          error: "Invalid class ID",
+          message: "Class ID must be a positive number",
         });
         return;
       }
@@ -85,26 +92,26 @@ export class ClassController {
       const classData = await ClassService.getClassById(id);
 
       res.status(200).json({
-        message: 'Class retrieved successfully',
+        message: "Class retrieved successfully",
         data: { class: classData },
       });
     } catch (error) {
       if (error instanceof Error) {
-        if (error.message === 'Class not found') {
+        if (error.message === "Class not found") {
           res.status(404).json({
-            error: 'Class not found',
-            message: 'Class with the specified ID does not exist',
+            error: "Class not found",
+            message: "Class with the specified ID does not exist",
           });
         } else {
           res.status(500).json({
-            error: 'Failed to retrieve class',
-            message: 'An unexpected error occurred',
+            error: "Failed to retrieve class",
+            message: "An unexpected error occurred",
           });
         }
       } else {
         res.status(500).json({
-          error: 'Failed to retrieve class',
-          message: 'An unexpected error occurred',
+          error: "Failed to retrieve class",
+          message: "An unexpected error occurred",
         });
       }
     }
@@ -121,8 +128,8 @@ export class ClassController {
 
       if (isNaN(id) || id < 1) {
         res.status(400).json({
-          error: 'Invalid class ID',
-          message: 'Class ID must be a positive number',
+          error: "Invalid class ID",
+          message: "Class ID must be a positive number",
         });
         return;
       }
@@ -130,7 +137,7 @@ export class ClassController {
       const classWithStudents = await ClassService.getClassWithStudents(id);
 
       res.status(200).json({
-        message: 'Class students retrieved successfully',
+        message: "Class students retrieved successfully",
         data: {
           class: {
             id: classWithStudents.id,
@@ -145,21 +152,21 @@ export class ClassController {
       });
     } catch (error) {
       if (error instanceof Error) {
-        if (error.message === 'Class not found') {
+        if (error.message === "Class not found") {
           res.status(404).json({
-            error: 'Class not found',
-            message: 'Class with the specified ID does not exist',
+            error: "Class not found",
+            message: "Class with the specified ID does not exist",
           });
         } else {
           res.status(500).json({
-            error: 'Failed to retrieve class students',
-            message: 'An unexpected error occurred',
+            error: "Failed to retrieve class students",
+            message: "An unexpected error occurred",
           });
         }
       } else {
         res.status(500).json({
-          error: 'Failed to retrieve class students',
-          message: 'An unexpected error occurred',
+          error: "Failed to retrieve class students",
+          message: "An unexpected error occurred",
         });
       }
     }
@@ -176,8 +183,8 @@ export class ClassController {
 
       if (isNaN(id) || id < 1) {
         res.status(400).json({
-          error: 'Invalid class ID',
-          message: 'Class ID must be a positive number',
+          error: "Invalid class ID",
+          message: "Class ID must be a positive number",
         });
         return;
       }
@@ -190,31 +197,31 @@ export class ClassController {
       });
 
       res.status(200).json({
-        message: 'Class updated successfully',
+        message: "Class updated successfully",
         data: { class: updatedClass },
       });
     } catch (error) {
       if (error instanceof Error) {
-        if (error.message === 'Class not found') {
+        if (error.message === "Class not found") {
           res.status(404).json({
-            error: 'Class not found',
-            message: 'Class with the specified ID does not exist',
+            error: "Class not found",
+            message: "Class with the specified ID does not exist",
           });
-        } else if (error.message.includes('already exists')) {
+        } else if (error.message.includes("already exists")) {
           res.status(409).json({
-            error: 'Class update failed',
+            error: "Class update failed",
             message: error.message,
           });
         } else {
           res.status(500).json({
-            error: 'Class update failed',
-            message: 'An unexpected error occurred',
+            error: "Class update failed",
+            message: "An unexpected error occurred",
           });
         }
       } else {
         res.status(500).json({
-          error: 'Class update failed',
-          message: 'An unexpected error occurred',
+          error: "Class update failed",
+          message: "An unexpected error occurred",
         });
       }
     }
@@ -231,8 +238,8 @@ export class ClassController {
 
       if (isNaN(id) || id < 1) {
         res.status(400).json({
-          error: 'Invalid class ID',
-          message: 'Class ID must be a positive number',
+          error: "Invalid class ID",
+          message: "Class ID must be a positive number",
         });
         return;
       }
@@ -240,31 +247,33 @@ export class ClassController {
       await ClassService.deleteClass(id);
 
       res.status(200).json({
-        message: 'Class deleted successfully',
+        message: "Class deleted successfully",
         data: { deletedClassId: id },
       });
     } catch (error) {
       if (error instanceof Error) {
-        if (error.message === 'Class not found') {
+        if (error.message === "Class not found") {
           res.status(404).json({
-            error: 'Class not found',
-            message: 'Class with the specified ID does not exist',
+            error: "Class not found",
+            message: "Class with the specified ID does not exist",
           });
-        } else if (error.message.includes('Cannot delete class with enrolled students')) {
+        } else if (
+          error.message.includes("Cannot delete class with enrolled students")
+        ) {
           res.status(400).json({
-            error: 'Class deletion failed',
+            error: "Class deletion failed",
             message: error.message,
           });
         } else {
           res.status(500).json({
-            error: 'Class deletion failed',
-            message: 'An unexpected error occurred',
+            error: "Class deletion failed",
+            message: "An unexpected error occurred",
           });
         }
       } else {
         res.status(500).json({
-          error: 'Class deletion failed',
-          message: 'An unexpected error occurred',
+          error: "Class deletion failed",
+          message: "An unexpected error occurred",
         });
       }
     }
@@ -282,8 +291,8 @@ export class ClassController {
 
       if (isNaN(classId) || classId < 1) {
         res.status(400).json({
-          error: 'Invalid class ID',
-          message: 'Class ID must be a positive number',
+          error: "Invalid class ID",
+          message: "Class ID must be a positive number",
         });
         return;
       }
@@ -291,7 +300,7 @@ export class ClassController {
       await ClassService.enrollStudent(classId, studentId);
 
       res.status(200).json({
-        message: 'Student enrolled successfully',
+        message: "Student enrolled successfully",
         data: {
           classId,
           studentId,
@@ -299,26 +308,150 @@ export class ClassController {
       });
     } catch (error) {
       if (error instanceof Error) {
-        if (error.message === 'Class not found' || error.message === 'Student not found') {
+        if (
+          error.message === "Class not found" ||
+          error.message === "Student not found"
+        ) {
           res.status(404).json({
-            error: 'Enrollment failed',
+            error: "Enrollment failed",
             message: error.message,
           });
-        } else if (error.message.includes('already enrolled')) {
+        } else if (error.message.includes("already enrolled")) {
           res.status(409).json({
-            error: 'Enrollment failed',
+            error: "Enrollment failed",
+            message: error.message,
+          });
+        } else if (error.message.includes("is full")) {
+          res.status(400).json({
+            error: "Class Full",
             message: error.message,
           });
         } else {
           res.status(500).json({
-            error: 'Enrollment failed',
-            message: 'An unexpected error occurred',
+            error: "Enrollment failed",
+            message: "An unexpected error occurred",
           });
         }
       } else {
         res.status(500).json({
-          error: 'Enrollment failed',
-          message: 'An unexpected error occurred',
+          error: "Enrollment failed",
+          message: "An unexpected error occurred",
+        });
+      }
+    }
+  }
+
+  /**
+   * Assign teacher to class (Admin only)
+   * PUT /classes/:id/assign-teacher
+   */
+  static async assignTeacherToClass(
+    req: Request,
+    res: Response
+  ): Promise<void> {
+    try {
+      const classId = parseInt(req.params.id);
+      const { teacherId } = req.body;
+
+      if (isNaN(classId) || classId < 1) {
+        res.status(400).json({
+          error: "Invalid class ID",
+          message: "Class ID must be a positive number",
+        });
+        return;
+      }
+
+      if (!teacherId || isNaN(teacherId) || teacherId < 1) {
+        res.status(400).json({
+          error: "Invalid teacher ID",
+          message: "Teacher ID must be a positive number",
+        });
+        return;
+      }
+
+      const updatedClass = await ClassService.assignTeacherToClass(
+        classId,
+        teacherId
+      );
+
+      res.status(200).json({
+        message: "Teacher assigned to class successfully",
+        data: { class: updatedClass },
+      });
+    } catch (error) {
+      if (error instanceof Error) {
+        if (error.message === "Class not found") {
+          res.status(404).json({
+            error: "Class not found",
+            message: "Class with the specified ID does not exist",
+          });
+        } else if (error.message === "Teacher not found") {
+          res.status(404).json({
+            error: "Teacher not found",
+            message: "Teacher with the specified ID does not exist",
+          });
+        } else if (error.message.includes("not a teacher")) {
+          res.status(400).json({
+            error: "Invalid teacher",
+            message: error.message,
+          });
+        } else {
+          res.status(500).json({
+            error: "Failed to assign teacher to class",
+            message: "An unexpected error occurred",
+          });
+        }
+      } else {
+        res.status(500).json({
+          error: "Failed to assign teacher to class",
+          message: "An unexpected error occurred",
+        });
+      }
+    }
+  }
+
+  /**
+   * Remove teacher from class (Admin only)
+   * DELETE /classes/:id/remove-teacher
+   */
+  static async removeTeacherFromClass(
+    req: Request,
+    res: Response
+  ): Promise<void> {
+    try {
+      const classId = parseInt(req.params.id);
+
+      if (isNaN(classId) || classId < 1) {
+        res.status(400).json({
+          error: "Invalid class ID",
+          message: "Class ID must be a positive number",
+        });
+        return;
+      }
+
+      const updatedClass = await ClassService.removeTeacherFromClass(classId);
+
+      res.status(200).json({
+        message: "Teacher removed from class successfully",
+        data: { class: updatedClass },
+      });
+    } catch (error) {
+      if (error instanceof Error) {
+        if (error.message === "Class not found") {
+          res.status(404).json({
+            error: "Class not found",
+            message: "Class with the specified ID does not exist",
+          });
+        } else {
+          res.status(500).json({
+            error: "Failed to remove teacher from class",
+            message: "An unexpected error occurred",
+          });
+        }
+      } else {
+        res.status(500).json({
+          error: "Failed to remove teacher from class",
+          message: "An unexpected error occurred",
         });
       }
     }

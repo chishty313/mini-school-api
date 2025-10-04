@@ -1,6 +1,10 @@
-import { Request, Response } from 'express';
-import { StudentService } from '../services/student.service';
-import { CreateStudentDto, UpdateStudentDto, GetStudentsQueryDto } from '../validators/student.dto';
+import { Request, Response } from "express";
+import { StudentService } from "../services/student.service";
+import {
+  CreateStudentDto,
+  UpdateStudentDto,
+  GetStudentsQueryDto,
+} from "../validators/student.dto";
 
 export class StudentController {
   /**
@@ -15,30 +19,30 @@ export class StudentController {
       const student = await StudentService.createStudent({
         name,
         age,
-        classId,
+        classId: classId === null ? null : classId || undefined,
       });
 
       res.status(201).json({
-        message: 'Student created successfully',
+        message: "Student created successfully",
         data: { student },
       });
     } catch (error) {
       if (error instanceof Error) {
-        if (error.message.includes('does not exist')) {
+        if (error.message.includes("does not exist")) {
           res.status(400).json({
-            error: 'Student creation failed',
+            error: "Student creation failed",
             message: error.message,
           });
         } else {
           res.status(500).json({
-            error: 'Student creation failed',
-            message: 'An unexpected error occurred',
+            error: "Student creation failed",
+            message: "An unexpected error occurred",
           });
         }
       } else {
         res.status(500).json({
-          error: 'Student creation failed',
-          message: 'An unexpected error occurred',
+          error: "Student creation failed",
+          message: "An unexpected error occurred",
         });
       }
     }
@@ -51,31 +55,37 @@ export class StudentController {
    */
   static async getStudents(req: Request, res: Response): Promise<void> {
     try {
-      const page = req.query.page ? parseInt(req.query.page as string) : undefined;
-      const limit = req.query.limit ? parseInt(req.query.limit as string) : undefined;
-      const classId = req.query.classId ? parseInt(req.query.classId as string) : undefined;
+      const page = req.query.page
+        ? parseInt(req.query.page as string)
+        : undefined;
+      const limit = req.query.limit
+        ? parseInt(req.query.limit as string)
+        : undefined;
+      const classId = req.query.classId
+        ? parseInt(req.query.classId as string)
+        : undefined;
 
       // Basic validation
       if (page && (isNaN(page) || page < 1)) {
         res.status(400).json({
-          error: 'Invalid query parameter',
-          message: 'Page must be a positive number',
+          error: "Invalid query parameter",
+          message: "Page must be a positive number",
         });
         return;
       }
 
       if (limit && (isNaN(limit) || limit < 1 || limit > 100)) {
         res.status(400).json({
-          error: 'Invalid query parameter',
-          message: 'Limit must be between 1 and 100',
+          error: "Invalid query parameter",
+          message: "Limit must be between 1 and 100",
         });
         return;
       }
 
       if (classId && (isNaN(classId) || classId < 1)) {
         res.status(400).json({
-          error: 'Invalid query parameter',
-          message: 'Class ID must be a positive number',
+          error: "Invalid query parameter",
+          message: "Class ID must be a positive number",
         });
         return;
       }
@@ -87,14 +97,14 @@ export class StudentController {
       });
 
       res.status(200).json({
-        message: 'Students retrieved successfully',
+        message: "Students retrieved successfully",
         data: result,
       });
     } catch (error) {
-      console.error('Get students error:', error);
+      console.error("Get students error:", error);
       res.status(500).json({
-        error: 'Failed to retrieve students',
-        message: 'An unexpected error occurred',
+        error: "Failed to retrieve students",
+        message: "An unexpected error occurred",
       });
     }
   }
@@ -110,8 +120,8 @@ export class StudentController {
 
       if (isNaN(id) || id < 1) {
         res.status(400).json({
-          error: 'Invalid student ID',
-          message: 'Student ID must be a positive number',
+          error: "Invalid student ID",
+          message: "Student ID must be a positive number",
         });
         return;
       }
@@ -119,26 +129,26 @@ export class StudentController {
       const student = await StudentService.getStudentById(id);
 
       res.status(200).json({
-        message: 'Student retrieved successfully',
+        message: "Student retrieved successfully",
         data: { student },
       });
     } catch (error) {
       if (error instanceof Error) {
-        if (error.message === 'Student not found') {
+        if (error.message === "Student not found") {
           res.status(404).json({
-            error: 'Student not found',
-            message: 'Student with the specified ID does not exist',
+            error: "Student not found",
+            message: "Student with the specified ID does not exist",
           });
         } else {
           res.status(500).json({
-            error: 'Failed to retrieve student',
-            message: 'An unexpected error occurred',
+            error: "Failed to retrieve student",
+            message: "An unexpected error occurred",
           });
         }
       } else {
         res.status(500).json({
-          error: 'Failed to retrieve student',
-          message: 'An unexpected error occurred',
+          error: "Failed to retrieve student",
+          message: "An unexpected error occurred",
         });
       }
     }
@@ -155,8 +165,8 @@ export class StudentController {
 
       if (isNaN(id) || id < 1) {
         res.status(400).json({
-          error: 'Invalid student ID',
-          message: 'Student ID must be a positive number',
+          error: "Invalid student ID",
+          message: "Student ID must be a positive number",
         });
         return;
       }
@@ -166,35 +176,35 @@ export class StudentController {
       const student = await StudentService.updateStudent(id, {
         name,
         age,
-        classId,
+        classId: classId === null ? null : classId || undefined,
       });
 
       res.status(200).json({
-        message: 'Student updated successfully',
+        message: "Student updated successfully",
         data: { student },
       });
     } catch (error) {
       if (error instanceof Error) {
-        if (error.message === 'Student not found') {
+        if (error.message === "Student not found") {
           res.status(404).json({
-            error: 'Student not found',
-            message: 'Student with the specified ID does not exist',
+            error: "Student not found",
+            message: "Student with the specified ID does not exist",
           });
-        } else if (error.message.includes('does not exist')) {
+        } else if (error.message.includes("does not exist")) {
           res.status(400).json({
-            error: 'Student update failed',
+            error: "Student update failed",
             message: error.message,
           });
         } else {
           res.status(500).json({
-            error: 'Student update failed',
-            message: 'An unexpected error occurred',
+            error: "Student update failed",
+            message: "An unexpected error occurred",
           });
         }
       } else {
         res.status(500).json({
-          error: 'Student update failed',
-          message: 'An unexpected error occurred',
+          error: "Student update failed",
+          message: "An unexpected error occurred",
         });
       }
     }
@@ -211,8 +221,8 @@ export class StudentController {
 
       if (isNaN(id) || id < 1) {
         res.status(400).json({
-          error: 'Invalid student ID',
-          message: 'Student ID must be a positive number',
+          error: "Invalid student ID",
+          message: "Student ID must be a positive number",
         });
         return;
       }
@@ -220,28 +230,53 @@ export class StudentController {
       await StudentService.deleteStudent(id);
 
       res.status(200).json({
-        message: 'Student deleted successfully',
+        message: "Student deleted successfully",
         data: { deletedStudentId: id },
       });
     } catch (error) {
       if (error instanceof Error) {
-        if (error.message === 'Student not found') {
+        if (error.message === "Student not found") {
           res.status(404).json({
-            error: 'Student not found',
-            message: 'Student with the specified ID does not exist',
+            error: "Student not found",
+            message: "Student with the specified ID does not exist",
           });
         } else {
           res.status(500).json({
-            error: 'Student deletion failed',
-            message: 'An unexpected error occurred',
+            error: "Student deletion failed",
+            message: "An unexpected error occurred",
           });
         }
       } else {
         res.status(500).json({
-          error: 'Student deletion failed',
-          message: 'An unexpected error occurred',
+          error: "Student deletion failed",
+          message: "An unexpected error occurred",
         });
       }
+    }
+  }
+
+  /**
+   * Get current student's classes
+   * GET /students/me/classes
+   * Access: Student only
+   */
+  static async getMyClasses(req: Request, res: Response): Promise<void> {
+    try {
+      // Get the current user's ID from the authenticated user
+      const userId = req.user!.userId;
+
+      const classes = await StudentService.getStudentClasses(userId);
+
+      res.status(200).json({
+        message: "Student classes retrieved successfully",
+        data: { classes },
+      });
+    } catch (error) {
+      console.error("Get student classes error:", error);
+      res.status(500).json({
+        error: "Failed to retrieve student classes",
+        message: "An unexpected error occurred",
+      });
     }
   }
 }

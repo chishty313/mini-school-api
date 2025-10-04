@@ -12,6 +12,7 @@
     "db:studio": "drizzle-kit studio",
     "test:db": "ts-node src/utils/testConnection.ts",
     "seed": "ts-node src/scripts/seed.ts",
+    "clear": "ts-node src/scripts/clear-data.ts",
     "docker:db": "docker-compose up postgres pgadmin -d",
     "docker:up": "docker-compose up -d",
     "docker:down": "docker-compose down"
@@ -20,6 +21,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^1.12.2",
     "bcryptjs": "^3.0.2",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.2",
@@ -30,6 +32,7 @@
     "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.1",
+    "pg": "^8.16.3",
     "postgres": "^3.4.7",
     "reflect-metadata": "^0.2.2"
   },

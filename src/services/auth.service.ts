@@ -1,8 +1,8 @@
-import { db } from '../config/database';
-import { users, User, NewUser } from '../models/schema';
-import { PasswordService } from '../utils/password';
-import { JWTService, TokenPair } from '../utils/jwt';
-import { eq } from 'drizzle-orm';
+import { db } from "../config/database";
+import { users, students, User, NewUser, NewStudent } from "../models/schema";
+import { PasswordService } from "../utils/password";
+import { JWTService, TokenPair } from "../utils/jwt";
+import { eq } from "drizzle-orm";
 
 export class AuthService {
   /**
@@ -12,24 +12,33 @@ export class AuthService {
     name: string;
     email: string;
     password: string;
-    role: 'admin' | 'teacher' | 'student';
-  }): Promise<{ user: Omit<User, 'passwordHash'>; tokens: TokenPair }> {
-    
+    role: "admin" | "teacher" | "student";
+  }): Promise<{ user: Omit<User, "passwordHash">; tokens: TokenPair }> {
     // Check if user already exists
-    const existingUser = await db.select().from(users).where(eq(users.email, userData.email)).limit(1);
-    
+    const existingUser = await db
+      .select()
+      .from(users)
+      .where(eq(users.email, userData.email))
+      .limit(1);
+
     if (existingUser.length > 0) {
-      throw new Error('User with this email already exists');
+      throw new Error("User with this email already exists");
     }
 
     // Validate password strength
-    const passwordValidation = PasswordService.validatePasswordStrength(userData.password);
+    const passwordValidation = PasswordService.validatePasswordStrength(
+      userData.password
+    );
     if (!passwordValidation.isValid) {
-      throw new Error(`Password validation failed: ${passwordValidation.errors.join(', ')}`);
+      throw new Error(
+        `Password validation failed: ${passwordValidation.errors.join(", ")}`
+      );
     }
 
     // Hash password
-    const hashedPassword = await PasswordService.hashPassword(userData.password);
+    const hashedPassword = await PasswordService.hashPassword(
+      userData.password
+    );
 
     // Create user
     const newUser: NewUser = {
@@ -40,6 +49,17 @@ export class AuthService {
     };
 
     const [createdUser] = await db.insert(users).values(newUser).returning();
+
+    // If the user is a student, also create a student record
+    if (userData.role === "student") {
+      const newStudent: NewStudent = {
+        name: userData.name,
+        age: 18, // Default age, can be updated later
+        classId: null, // No class assigned initially
+      };
+
+      await db.insert(students).values(newStudent);
+    }
 
     // Generate tokens
     const tokens = JWTService.generateTokens({
@@ -60,20 +80,29 @@ export class AuthService {
   /**
    * Login user
    */
-  static async loginUser(email: string, password: string): Promise<{ user: Omit<User, 'passwordHash'>; tokens: TokenPair }> {
-    
+  static async loginUser(
+    email: string,
+    password: string
+  ): Promise<{ user: Omit<User, "passwordHash">; tokens: TokenPair }> {
     // Find user by email
-    const [user] = await db.select().from(users).where(eq(users.email, email)).limit(1);
+    const [user] = await db
+      .select()
+      .from(users)
+      .where(eq(users.email, email))
+      .limit(1);
 
     if (!user) {
-      throw new Error('Invalid email or password');
+      throw new Error("Invalid email or password");
     }
 
     // Verify password
-    const isPasswordValid = await PasswordService.comparePassword(password, user.passwordHash);
+    const isPasswordValid = await PasswordService.comparePassword(
+      password,
+      user.passwordHash
+    );
 
     if (!isPasswordValid) {
-      throw new Error('Invalid email or password');
+      throw new Error("Invalid email or password");
     }
 
     // Generate tokens
@@ -101,10 +130,14 @@ export class AuthService {
       const payload = JWTService.verifyRefreshToken(refreshToken);
 
       // Verify user still exists
-      const [user] = await db.select().from(users).where(eq(users.id, payload.userId)).limit(1);
+      const [user] = await db
+        .select()
+        .from(users)
+        .where(eq(users.id, payload.userId))
+        .limit(1);
 
       if (!user) {
-        throw new Error('User no longer exists');
+        throw new Error("User no longer exists");
       }
 
       // Generate new tokens
@@ -114,15 +147,21 @@ export class AuthService {
         role: user.role,
       });
     } catch (error) {
-      throw new Error('Invalid refresh token');
+      throw new Error("Invalid refresh token");
     }
   }
 
   /**
    * Get user by ID
    */
-  static async getUserById(userId: number): Promise<Omit<User, 'passwordHash'> | null> {
-    const [user] = await db.select().from(users).where(eq(users.id, userId)).limit(1);
+  static async getUserById(
+    userId: number
+  ): Promise<Omit<User, "passwordHash"> | null> {
+    const [user] = await db
+      .select()
+      .from(users)
+      .where(eq(users.id, userId))
+      .limit(1);
 
     if (!user) {
       return null;

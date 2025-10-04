@@ -15,6 +15,20 @@
       "when": 1756200644165,
       "tag": "0001_spicy_zarda",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1759406375572,
+      "tag": "0002_loving_ultragirl",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1759482558477,
+      "tag": "0003_flashy_hemingway",
+      "breakpoints": true
     }
   ]
 }
